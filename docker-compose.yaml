@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+    database:
+        environment:
+            - ACCEPT_EULA=Y
+            - MSSQL_SA_PASSWORD=myStrongPassword12#
+        volumes:
+            - sqldata:/var/opt/mssql/server
+        ports:
+            - '1433:1433'
+        container_name: sqlserver
+        deploy:
+          resources:
+            reservations:
+              cpus: '2'
+              memory: 2GB
+        image: mcr.microsoft.com/mssql/server
+    web:
+        ports:
+         - '80:80'
+        container_name: contacts
+        restart: on-failure
+        domainname: martin8207
+        image: martin8207contactsscr.azurecr.io/contacts:v1
+volumes:
+  sqldata:
+    driver: azure_file
+    driver_opts:
+      share_name: sql-volume
+      storage_account_name: contactstorageaccqmartin
